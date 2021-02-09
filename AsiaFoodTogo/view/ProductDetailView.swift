@@ -45,6 +45,9 @@ struct ProductDetailView: View {
                     Button(action: {
                         self.cartDm.addToCart(product_id: self.product_id) { message in
                             self.showMessage(message: message)
+                            if((message.success) != nil) {
+                                self.cartDm.loadCart()
+                            }
                         }
                     }, label: {
                         HStack {

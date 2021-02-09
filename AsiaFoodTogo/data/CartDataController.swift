@@ -26,7 +26,6 @@ class CartDataController: ObservableObject  {
                 let message = try JSONDecoder().decode(ResponseDTO.self, from: data)
                 DispatchQueue.main.async {
                     completion(message)
-                    self.loadCart()
                 }
             } catch let error {
                    print("Fehler bei der Konvertierung: \(error)")
@@ -66,7 +65,6 @@ class CartDataController: ObservableObject  {
                 let message = try JSONDecoder().decode(ResponseDTO.self, from: data)
                 DispatchQueue.main.async {
                     completion(message)
-                    self.loadCart()
                 }
             } catch let error {
                    print("Fehler bei der Konvertierung: \(error)")
@@ -88,7 +86,6 @@ class CartDataController: ObservableObject  {
                 let message = try JSONDecoder().decode(ResponseDTO.self, from: data)
                 DispatchQueue.main.async {
                     completion(message)
-                    self.loadCart()
                 }
             } catch let error {
                    print("Fehler bei der Konvertierung: \(error)")

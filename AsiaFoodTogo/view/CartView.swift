@@ -17,6 +17,7 @@ struct CartView: View {
     @State private var messageText = ""
     
     var body: some View {
+//        NavigationView {
         List{
             Section(header: Text("Products")) {
                 ForEach(self.appData.cart.products,id: \.product_id) { item in
@@ -28,23 +29,24 @@ struct CartView: View {
                     TotalListRow(total: item)
                 }
                 Spacer()
-                Spacer()
             }
-        } .overlay(Button(action: {}) {
-            Text("Checkout")
-                .padding()
-                .font(.system(size: 24))
-                .foregroundColor(Color.white)
-                .frame(width: 250, height: 60)
-                .background(Color.blue)
-                .cornerRadius(38.5)
-                .padding()
-                .shadow(color: Color.black.opacity(0.3),
-                        radius: 3,
-                        x: 3,
-                        y: 3)
-            
-        }.disabled(appData.cartItemCount > 0),alignment: .bottom)
+        } .overlay(
+            NavigationLink(destination: CheckoutView()) {
+                HStack {
+                    Text("Checkout")
+                        .padding()
+                        .font(.system(size: 24))
+                        .foregroundColor(Color.white)
+                        .frame(width: 250, height: 60)
+                        .background(Color.blue)
+                        .cornerRadius(38.5)
+                        .padding()
+                        .shadow(color: Color.black.opacity(0.3),
+                                radius: 3,
+                                x: 3,
+                                y: 3)
+                }
+            }, alignment: .bottom)
         .listStyle(GroupedListStyle())
         .toast(isPresented: self.$showToast) {
             HStack {
@@ -52,6 +54,7 @@ struct CartView: View {
                 Text(self.messageText)
             }
         } //toast
+//        }
     }
     
     public func showMessage(message: ResponseDTO) {
@@ -92,8 +95,11 @@ struct ProductItemListRow: View {
                                    .onTapGesture {
                                         var quantity = Int(self.productItem.quantity) ?? 0
                                         quantity = quantity - 1
-                                    dm.editCart(key: self.productItem.cart_id, quantity: quantity ) { message in
+                                    self.dm.editCart(key: self.productItem.cart_id, quantity: quantity ) { message in
                                         cartView.showMessage(message: message)
+                                        if((message.success) != nil) {
+                                            self.dm.loadCart()
+                                        }
                                     }
                                    }.frame(width: 32, height: 32)
                                
@@ -103,16 +109,22 @@ struct ProductItemListRow: View {
                                    .onTapGesture {
                                     var quantity = Int(self.productItem.quantity) ?? 0
                                     quantity = quantity + 1
-                                    dm.editCart(key: self.productItem.cart_id, quantity: quantity ) { message in
+                                    self.dm.editCart(key: self.productItem.cart_id, quantity: quantity ) { message in
                                         cartView.showMessage(message: message)
+                                        if((message.success) != nil) {
+                                            self.dm.loadCart()
+                                        }
                                     }
                                }
                              Spacer()
                             Image(systemName: "trash").resizable().frame(width: 30, height: 30)
                                 .foregroundColor(Color.red)
                                    .onTapGesture {
-                                    dm.removeCart(key: self.productItem.cart_id) { message in
+                                    self.dm.removeCart(key: self.productItem.cart_id) { message in
                                         cartView.showMessage(message: message)
+                                        if((message.success) != nil) {
+                                            self.dm.loadCart()
+                                        }
                                     }
                                }
                            }

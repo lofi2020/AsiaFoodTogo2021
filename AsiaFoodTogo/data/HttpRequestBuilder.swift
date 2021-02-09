@@ -8,7 +8,7 @@ enum HttpMethod: String {
 }
 
 class HttpRequestBuilder {
-    
+
     static func getRequest(url: String, httpMethod: HttpMethod, parameters: [String: String] = [:], body: [String: String] = [:]) -> URLRequest {
         var paramsWithToken = parameters
         paramsWithToken["api_token"] = AppData.shared().store.apiToken
